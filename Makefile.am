@@ -35,10 +35,6 @@ AUTOMAKE_OPTIONS = foreign dist-bzip2 dist-zip
 
 SUBDIRS = runtime compiler test util
 
-if PROBUILD
-SUBDIRS += pro
-endif
-
 if USEGTEST
 SUBDIRS += utests
 endif
@@ -63,6 +59,15 @@ src-release:
 
 check-release:
 	md5sum -c $(distdir).md5sum
+
+prebuilt:
+	cd stocklib; $(MAKE)
+
+prebuilt-install:
+	cd stocklib; $(MAKE) install
+
+clean-local:
+	cd stocklib; $(MAKE) clean
 
 pkgincludedir = ${prefix}/include/fix8
 ffincdir = include/fix8/ff
@@ -115,9 +120,10 @@ endif
 
 EXTRA_DIST = $(xmltoman) fix8.spec \
 	$(INSTALL_DATA_LOCAL_SCHEMA) $(pkginclude_HEADERS) $(INSTALL_DATA_LOCAL_TEST) version.sh ${ffincludes} \
-	bootstrap README.md LICENSE
+	bootstrap README.md LICENSE runtime/dllmain.cpp stocklib/Makefile.am
 
 if USEDOXYGEN
 EXTRA_DIST += doc/fix8_Logo_RGB_small.png doc/fix8.footer.html doc/mainpage.doxygen
 endif
+EXTRA_DIST += utests/precomp.hpp runtime/precomp.hpp util/precomp.hpp compiler/precomp.hpp
 
